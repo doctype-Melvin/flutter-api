@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 void main() {
   runApp(
     const MaterialApp(
+      title: 'Globe Factual',
       home: Scaffold(),
     ),
   );
@@ -15,12 +16,13 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.red[400],
         leading: const IconButton(
           icon: Icon(Icons.menu),
           tooltip: 'Navigation Menu',
           onPressed: null,
         ),
-        title: const Text('New Found Glory'),
+        title: const Text('Globe Factual'),
         actions: const [
           IconButton(
             onPressed: null,
@@ -30,8 +32,21 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: const Center(
-        child: MyButton(),
-      ),
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(8),
+            child: Text(
+              'Content goes here',
+              style: TextStyle(
+                fontSize: 30,
+              ),
+            ),
+          ),
+          MyButton(),
+        ],
+      )),
       floatingActionButton: const FloatingActionButton(
         onPressed: null,
         tooltip: 'Add',
@@ -56,9 +71,9 @@ class MyButton extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          color: Colors.lightGreen[500],
+          color: Colors.yellow[400],
         ),
-        child: const Center(child: Text('Engage')),
+        child: const Center(child: Text('Get next fact')),
       ),
     );
   }
