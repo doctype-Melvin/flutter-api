@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'dart:convert';
 
 void main() {
   runApp(
     const MaterialApp(
       title: 'Globe Factual',
-      home: Scaffold(),
+      home: HomePage(),
     ),
   );
 }
@@ -63,7 +66,7 @@ class MyButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print('MyButton was tapped!');
+        // print('MyButton was tapped!');
       },
       child: Container(
         height: 50,
