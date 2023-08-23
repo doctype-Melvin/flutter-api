@@ -1,16 +1,5 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:async';
 import 'dart:convert';
-
-void main() {
-  runApp(
-    const MaterialApp(
-      title: 'Globe Factual',
-    ),
-  );
-}
+import 'package:http/http.dart' as http;
 
 Future<void> fetchCountry() async {
   final response =
@@ -21,5 +10,13 @@ Future<void> fetchCountry() async {
     print(data);
   } else {
     throw Exception('This failed');
+  }
+}
+
+void main() async {
+  try {
+    await fetchCountry();
+  } catch (error) {
+    print('Error: $error');
   }
 }
