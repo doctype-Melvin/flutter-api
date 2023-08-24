@@ -3,6 +3,7 @@ import 'package:locale_emoji_flutter/locale_emoji_flutter.dart' as le;
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 void main() {
   runApp(
@@ -14,10 +15,15 @@ void main() {
 }
 
 Future<Country> fetchCountry() async {
-  final response = await http
-      .get(Uri.parse('https://restcountries.com/v3.1/name/deutschland'));
+  final response =
+      await http.get(Uri.parse('https://restcountries.com/v3.1/all'));
 
   if (response.statusCode == 200) {
+    // final fullList = jsonDecode(response.body);
+    // Random random = Random();
+    // int randomNumber = random.nextInt(250);
+    // final randomCountry = fullList[randomNumber];
+    // return Country.fromJson(randomCountry);
     return Country.fromJson(jsonDecode(response.body));
   } else {
     throw Exception('This failed');
@@ -25,20 +31,29 @@ Future<Country> fetchCountry() async {
 }
 
 class Country {
-  final String native;
+  final String name;
+  final String localeCode;
+  final String flagPng;
 
   const Country({
-    required this.native,
+    required this.name,
+    required this.localeCode,
+    required this.flagPng,
   });
 
   factory Country.fromJson(List<dynamic> jsonList) {
     if (jsonList.isEmpty) {
       throw Exception('No data in list');
     }
-    final firstItem = jsonList[0];
-    if (firstItem is Map<String, dynamic>) {
+    Random random = Random();
+    int randomNumber = random.nextInt(250);
+    final randomItem = jsonList[randomNumber];
+    if (randomItem is Map<String, dynamic>) {
       return Country(
-          native: firstItem['name']['nativeName']['deu']['official'] as String);
+        name: randomItem['name']['official'] as String,
+        localeCode: randomItem['cca3'] as String,
+        flagPng: randomItem['flags']['png'] as String,
+      );
     } else {
       throw Exception('Something is wrong ');
     }
@@ -68,7 +83,11 @@ class _MyContentState extends State<MyContent> {
         future: futureCountry,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return CountryDetails(native: snapshot.data!.native);
+            return CountryDetails(
+              name: snapshot.data!.name,
+              localeCode: snapshot.data!.localeCode,
+              flagPng: snapshot.data!.flagPng,
+            );
           } else if (snapshot.hasError) {
             return const Text('No data found ');
           }
@@ -80,9 +99,15 @@ class _MyContentState extends State<MyContent> {
 }
 
 class CountryDetails extends StatelessWidget {
-  const CountryDetails({required this.native, super.key});
+  const CountryDetails(
+      {required this.name,
+      required this.localeCode,
+      required this.flagPng,
+      super.key});
 
-  final String native;
+  final String name;
+  final String localeCode;
+  final String flagPng;
 
   @override
   Widget build(BuildContext context) {
@@ -92,15 +117,19 @@ class CountryDetails extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            native,
+            name,
             textAlign: TextAlign.center,
             style: const TextStyle(
                 fontWeight: FontWeight.bold, color: Colors.teal),
           ),
-          const Text(
-            '🇿🇦',
+          Text(
+            localeCode,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 50),
+            style: const TextStyle(fontSize: 50),
+          ),
+          Image(
+            image: NetworkImage(flagPng),
+            fit: BoxFit.cover,
           )
         ],
       ),
