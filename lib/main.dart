@@ -9,36 +9,26 @@ void main() {
   runApp(
     const MaterialApp(
       title: 'Globe Factual',
-      home: MyContent(),
+      home: Scaffold(body: MyContent()),
     ),
   );
-}
-
-Future<Country> fetchCountry() async {
-  final response =
-      await http.get(Uri.parse('https://restcountries.com/v3.1/all'));
-
-  if (response.statusCode == 200) {
-    // final fullList = jsonDecode(response.body);
-    // Random random = Random();
-    // int randomNumber = random.nextInt(250);
-    // final randomCountry = fullList[randomNumber];
-    // return Country.fromJson(randomCountry);
-    return Country.fromJson(jsonDecode(response.body));
-  } else {
-    throw Exception('This failed');
-  }
 }
 
 class Country {
   final String name;
   final String localeCode;
   final String flagPng;
+  final String region;
+  final String capital;
+  final int population;
 
   const Country({
     required this.name,
     required this.localeCode,
     required this.flagPng,
+    required this.region,
+    required this.capital,
+    required this.population,
   });
 
   factory Country.fromJson(List<dynamic> jsonList) {
@@ -53,10 +43,79 @@ class Country {
         name: randomItem['name']['official'] as String,
         localeCode: randomItem['cca3'] as String,
         flagPng: randomItem['flags']['png'] as String,
+        region: randomItem['region'] as String,
+        capital: randomItem['capital'][0],
+        population: randomItem['population'],
       );
     } else {
       throw Exception('Something is wrong ');
     }
+  }
+}
+
+Future<Country> fetchCountry() async {
+  final response =
+      await http.get(Uri.parse('https://restcountries.com/v3.1/all'));
+
+  if (response.statusCode == 200) {
+    return Country.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception('This failed');
+  }
+}
+
+class CountryDetails extends StatelessWidget {
+  const CountryDetails(
+      {required this.name,
+      required this.localeCode,
+      required this.flagPng,
+      required this.region,
+      required this.capital,
+      required this.population,
+      super.key});
+
+  final String name;
+  final String localeCode;
+  final String flagPng;
+  final String region;
+  final String capital;
+  final int population;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        children: [
+          Text(name,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 35,
+                color: Colors.blueGrey[800],
+              )),
+          Image(
+            image: NetworkImage(flagPng),
+            fit: BoxFit.cover,
+          ),
+          Text(
+            localeCode,
+            style: const TextStyle(fontSize: 20),
+          ),
+          Text(
+            'Capital: $capital',
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.blueGrey[800],
+                fontSize: 25),
+          ),
+          Text('Population: $population',
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.blueGrey[600],
+              ))
+        ],
+      ),
+    );
   }
 }
 
@@ -87,51 +146,15 @@ class _MyContentState extends State<MyContent> {
               name: snapshot.data!.name,
               localeCode: snapshot.data!.localeCode,
               flagPng: snapshot.data!.flagPng,
+              region: snapshot.data!.region,
+              capital: snapshot.data!.capital,
+              population: snapshot.data!.population,
             );
           } else if (snapshot.hasError) {
             return const Text('No data found ');
           }
           return const CircularProgressIndicator();
         },
-      ),
-    );
-  }
-}
-
-class CountryDetails extends StatelessWidget {
-  const CountryDetails(
-      {required this.name,
-      required this.localeCode,
-      required this.flagPng,
-      super.key});
-
-  final String name;
-  final String localeCode;
-  final String flagPng;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      // height: 150,
-      // padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Column(
-        children: [
-          Text(
-            name,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.teal),
-          ),
-          Text(
-            localeCode,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 50),
-          ),
-          Image(
-            image: NetworkImage(flagPng),
-            fit: BoxFit.cover,
-          )
-        ],
       ),
     );
   }
