@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:locale_emoji_flutter/locale_emoji_flutter.dart' as le;
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
