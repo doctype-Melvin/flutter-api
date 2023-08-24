@@ -1,5 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:locale_emoji_flutter/locale_emoji_flutter.dart' as le;
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
@@ -25,19 +25,20 @@ Future<Country> fetchCountry() async {
 }
 
 class Country {
-  final String name;
+  final String native;
 
   const Country({
-    required this.name,
+    required this.native,
   });
 
   factory Country.fromJson(List<dynamic> jsonList) {
     if (jsonList.isEmpty) {
       throw Exception('No data in list');
     }
-    final firstItem = jsonList.first;
+    final firstItem = jsonList[0];
     if (firstItem is Map<String, dynamic>) {
-      return Country(name: firstItem['name'].common as String);
+      return Country(
+          native: firstItem['name']['nativeName']['deu']['official'] as String);
     } else {
       throw Exception('Something is wrong ');
     }
@@ -67,12 +68,41 @@ class _MyContentState extends State<MyContent> {
         future: futureCountry,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Text(snapshot.data!.name);
+            return CountryDetails(native: snapshot.data!.native);
           } else if (snapshot.hasError) {
             return const Text('No data found ');
           }
           return const CircularProgressIndicator();
         },
+      ),
+    );
+  }
+}
+
+class CountryDetails extends StatelessWidget {
+  const CountryDetails({required this.native, super.key});
+
+  final String native;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      // height: 150,
+      // padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Column(
+        children: [
+          Text(
+            native,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+                fontWeight: FontWeight.bold, color: Colors.teal),
+          ),
+          const Text(
+            '🇿🇦',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 50),
+          )
+        ],
       ),
     );
   }

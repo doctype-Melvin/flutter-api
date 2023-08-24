@@ -7,7 +7,7 @@ Future<void> fetchCountry() async {
 
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
-    print(data);
+    return data;
   } else {
     throw Exception('This failed');
   }
@@ -17,6 +17,6 @@ void main() async {
   try {
     await fetchCountry();
   } catch (error) {
-    print('Error: $error');
+    // Something
   }
 }
