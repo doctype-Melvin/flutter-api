@@ -47,7 +47,7 @@ class Country {
         population: randomItem['population'],
       );
     } else {
-      throw Exception('Something is wrong ');
+      throw Exception('Failed to generate Country from JSON list');
     }
   }
 }
@@ -59,7 +59,7 @@ Future<Country> fetchCountry() async {
   if (response.statusCode == 200) {
     return Country.fromJson(jsonDecode(response.body));
   } else {
-    throw Exception('This failed');
+    throw Exception('Bad response while fetching data');
   }
 }
 
@@ -111,7 +111,7 @@ class CountryDetails extends StatelessWidget {
               style: TextStyle(
                 fontSize: 20,
                 color: Colors.blueGrey[600],
-              ))
+              )),
         ],
       ),
     );
@@ -134,26 +134,38 @@ class _MyContentState extends State<MyContent> {
     futureCountry = fetchCountry();
   }
 
+  void fetchNewCountry() {
+    setState(() {
+      futureCountry = fetchCountry();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: FutureBuilder<Country>(
-        future: futureCountry,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return CountryDetails(
-              name: snapshot.data!.name,
-              localeCode: snapshot.data!.localeCode,
-              flagPng: snapshot.data!.flagPng,
-              region: snapshot.data!.region,
-              capital: snapshot.data!.capital,
-              population: snapshot.data!.population,
-            );
-          } else if (snapshot.hasError) {
-            return const Text('No data found ');
-          }
-          return const CircularProgressIndicator();
-        },
+      child: Column(
+        children: [
+          FutureBuilder<Country>(
+            future: futureCountry,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return CountryDetails(
+                  name: snapshot.data!.name,
+                  localeCode: snapshot.data!.localeCode,
+                  flagPng: snapshot.data!.flagPng,
+                  region: snapshot.data!.region,
+                  capital: snapshot.data!.capital,
+                  population: snapshot.data!.population,
+                );
+              } else if (snapshot.hasError) {
+                return const Text('No data found ');
+              }
+              return const CircularProgressIndicator();
+            },
+          ),
+          ElevatedButton(
+              onPressed: fetchNewCountry, child: const Text('Random Country'))
+        ],
       ),
     );
   }
