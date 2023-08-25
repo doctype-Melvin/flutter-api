@@ -144,6 +144,7 @@ class _MyContentState extends State<MyContent> {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           FutureBuilder<Country>(
             future: futureCountry,
@@ -164,7 +165,9 @@ class _MyContentState extends State<MyContent> {
             },
           ),
           ElevatedButton(
-              onPressed: fetchNewCountry, child: const Text('Random Country'))
+            onPressed: fetchNewCountry,
+            child: const Text('Random Country'),
+          )
         ],
       ),
     );

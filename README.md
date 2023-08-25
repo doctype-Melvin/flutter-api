@@ -1,16 +1,10 @@
 # flutter_api
 
-A new Flutter project.
+Fetch data from an API and render data.
 
-## Getting Started
+## Description
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This is a little intro to myself regarding Flutter/Dart
+API consumption. This app fetches data from
+the restcountries API and renders random countries.
+There's still a lot for me to find out and to learn about Flutter/Dart.
